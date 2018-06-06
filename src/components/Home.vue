@@ -2,10 +2,10 @@
 	<div class="layout">
         <Layout :style="{height: '100%'}">
     		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="1">
-    			<Button type="primary" @click="modal1 = true" icon="edit">send</Button>
+    			<Button type="primary" @click="modal = true" icon="edit">send</Button>
                 <MenuItem class="menuItem" name="profile">
                     <Icon type="ios-keypad"></Icon>
-                    name
+                    {{userInfo.nickname}}
                 </MenuItem>
                 <MenuItem class="menuItem" name="index">
                     <Icon type="aperture"></Icon>
@@ -23,13 +23,13 @@
         </Layout>
 
 		<Modal
-		    v-model="modal1"
-		    title="input your content"
+		    v-model="modal"
+		    title="write something.."
 		    ok-text="send"
 		    cancel-text="cancel"
-		    @on-ok="ok"
-		    @on-cancel="cancel">
-		    <Input v-model="editArea" type="textarea" :rows="4" placeholder="Enter something..."></Input>
+            loading="loading"
+		    @on-ok="ok">
+		    <Input v-model="editArea" type="textarea" :rows="4" placeholder="=v="></Input>
 		</Modal>
     </div>
 </template>
@@ -39,13 +39,16 @@ export default{
 	name: 'Home',
 	data() {
 		return {
-			msg: 'home',
+            userInfo: '',
             contents: '',
-			modal1: false,
+			modal: false,
             editArea: ''
 		}
 	},
 	mounted() {
+        this.getUserInfo(res => {
+            this.userInfo = res
+        })
         this.getContent()
     },
 	methods: {
@@ -60,11 +63,12 @@ export default{
 			})
 		},
 		ok () {
+            
             this.$Message.info('Clicked ok');
+            setTimeout(() => {
+                this.modal = false
+            }, 1000)
         },
-        cancel () {
-            this.$Message.info('Clicked cancel');
-        }
 	}
 }
 </script>

@@ -45,6 +45,23 @@ Vue.prototype.axios = function(arg) {
         });
     })
 }
+
+Vue.prototype.getUserInfo = function(callback){
+    if(Vue.prototype.$userInfo){
+        callback && callback(Vue.prototype.$userInfo)
+    }else{
+        let config = {
+          url: '/api/user/getUserInfo'
+        }
+        this.axios(config).then(res => {
+            Vue.prototype.$userInfo = res.result
+            callback && callback(res.result)
+        }, err => {
+          throw err
+        })
+    }
+    
+}
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
