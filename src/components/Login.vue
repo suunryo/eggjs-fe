@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     signIn() {
-      console.log('aa')
       let params = {
         url: '/api/user/login',
         type: 'post'
