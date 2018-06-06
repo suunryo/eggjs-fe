@@ -13,7 +13,11 @@
                 </MenuItem>
             </Menu>
             <Content class="content">
-                Content
+                <Card :padding="8" class="m-b-20" v-for="v,i in contents" :key="i">
+                    <h4>{{v.user_name}}</h4>
+                    <div class="cardBody">{{v.content}}</div>
+                    <div class="cardFoot">{{v.update_time}}</div>
+                </Card>
             </Content>
             <Footer class="layout-footer-center">2018 &copy; Suunryo</Footer>
         </Layout>
@@ -25,7 +29,7 @@
 		    cancel-text="cancel"
 		    @on-ok="ok"
 		    @on-cancel="cancel">
-		    <Input v-model="value6" type="textarea" :rows="4" placeholder="Enter something..."></Input>
+		    <Input v-model="editArea" type="textarea" :rows="4" placeholder="Enter something..."></Input>
 		</Modal>
     </div>
 </template>
@@ -36,17 +40,21 @@ export default{
 	data() {
 		return {
 			msg: 'home',
-			modal1: false
+            contents: '',
+			modal1: false,
+            editArea: ''
 		}
 	},
-	mounted() {},
+	mounted() {
+        this.getContent()
+    },
 	methods: {
-		test() {
+		getContent() {
 			let params = {
-				url: '/api/user/test',
+				url: '/api/content/page',
 			}
 			this.axios(params).then(res => {
-			
+			     this.contents = res.result
 			}, err => {
 			
 			})
@@ -77,6 +85,15 @@ export default{
     	padding: 20px;
     	margin: 0 auto;
     	background-color: #fff;
+    }
+    .cardBody{
+        padding: 12px 8px;
+    }
+    .cardFoot{
+        padding-top: 5px;
+        font-size: 14px;
+        text-align: right;
+        border-top: 1px solid #dcdcdc;
     }
     .layout-footer-center{
         text-align: center;

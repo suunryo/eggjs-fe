@@ -14,14 +14,6 @@ Vue.use(iView)
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
-
 Vue.prototype.axios = function(arg) {
 
     let url = arg.url;
@@ -37,7 +29,7 @@ Vue.prototype.axios = function(arg) {
         config.params = data
     }
     config.headers = {
-    	'x-csrf-token': this.$cookies.get('csrfToken')
+        'x-csrf-token': this.$cookies.get('csrfToken')
     }
 
     return new Promise((resolve, reject) => {
@@ -53,4 +45,10 @@ Vue.prototype.axios = function(arg) {
         });
     })
 }
-
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>'
+})
