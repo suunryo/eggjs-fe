@@ -19,6 +19,11 @@
 	                <Radio label="female">Female</Radio>
 	            </RadioGroup>
 	        </FormItem>
+	        <FormItem label="Avatar">
+	        	<Upload action="/api/common/uploadfile" :headers="csrfToken" name="avatar" accept="image/*" :show-upload-list="false">
+					<Button type="ghost" icon="ios-cloud-upload-outline">Upload avatar</Button>
+				</Upload>
+	        </FormItem>
 	        <FormItem>
 	            <Button type="primary" @click="submit">Submit</Button>
 	            <Button type="ghost" style="margin-left: 8px">Cancel</Button>
@@ -58,7 +63,8 @@ export default {
 				account: [
                     { validator: validateAcc, trigger: 'blur' }
                 ]
-			}
+			},
+			csrfToken: {'x-csrf-token': this.$cookies.get('csrfToken')}
 		}
 	},
 	methods: {

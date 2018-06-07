@@ -1,7 +1,7 @@
 <template>
 	<div class="layout">
         <Layout :style="{height: '100%'}">
-    		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="1">
+    		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="index">
     			<Button type="primary" @click="modal = true" icon="edit">send</Button>
                 <MenuItem class="menuItem" name="profile">
                     <Icon type="ios-keypad"></Icon>
