@@ -34,12 +34,9 @@ export default {
         password: this.password
       }
       this.axios(params).then(res => {
-        if(res.code == 200){
-          this.getUserInfo()
-          this.$router.push('home')
-        }
+        if(res.code == 200) this.$router.push('home')
       }, err => {
-        // console.log(err)
+        throw err
       })
     },
     signup() {

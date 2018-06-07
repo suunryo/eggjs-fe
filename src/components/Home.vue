@@ -4,7 +4,7 @@
     		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="index">
     			<Button type="primary" @click="modal = true" icon="edit">send</Button>
                 <MenuItem class="menuItem" name="profile">
-                    <Icon type="ios-keypad"></Icon>
+                    <img class="headimg" width="30" :src="userInfo.headurl">
                     {{userInfo.nickname}}
                 </MenuItem>
                 <MenuItem class="menuItem" name="index">
@@ -46,9 +46,7 @@ export default{
 		}
 	},
 	mounted() {
-        this.getUserInfo(res => {
-            this.userInfo = res
-        })
+        this.getUserInfo()
         this.getContent()
     },
 	methods: {
@@ -62,6 +60,16 @@ export default{
 			
 			})
 		},
+        getUserInfo() {
+            let config = {
+                url: '/api/user/getUserInfo'
+            }
+            this.axios(config).then(res => {
+                this.userInfo = res.result
+            }, err => {
+              throw err
+            })
+        },
 		ok () {
             
             this.$Message.info('Clicked ok');
@@ -82,6 +90,11 @@ export default{
     }
     .menuItem{
     	float: right;
+    }
+    .headimg{
+        vertical-align: middle;
+        border-radius: 50%;
+        margin-right: 6px;
     }
     .content{
     	width: 80%;

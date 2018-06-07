@@ -20,13 +20,12 @@
 	            </RadioGroup>
 	        </FormItem>
 	        <FormItem label="Avatar">
-	        	<Upload action="/api/common/uploadfile" :headers="csrfToken" name="avatar" accept="image/*" :show-upload-list="false">
-					<Button type="ghost" icon="ios-cloud-upload-outline">Upload avatar</Button>
+	        	<Upload action="/api/common/uploadfile" :headers="csrfToken" name="avatar" accept="image/*" :show-upload-list="false" :on-success="uploadSuccess">
+					<img class="uploadImg" :src="formData.headurl || defaultAvatar">
 				</Upload>
 	        </FormItem>
 	        <FormItem>
-	            <Button type="primary" @click="submit">Submit</Button>
-	            <Button type="ghost" style="margin-left: 8px">Cancel</Button>
+	            <Button type="primary" @click="submit" long>Submit</Button>
 	        </FormItem>
 	    </Form>
 	</div>
@@ -58,13 +57,15 @@ export default {
 				password: null,
 				birthday: null,
 				gender: null,
+				headurl: null
 			},
 			ruleCustom: {
 				account: [
                     { validator: validateAcc, trigger: 'blur' }
                 ]
 			},
-			csrfToken: {'x-csrf-token': this.$cookies.get('csrfToken')}
+			csrfToken: {'x-csrf-token': this.$cookies.get('csrfToken')},
+			defaultAvatar: require('./../assets/default_avatar.jpg')
 		}
 	},
 	methods: {
@@ -80,6 +81,9 @@ export default {
 		},
 		datepick(val) {
 			this.formData.birthday = val
+		},
+		uploadSuccess(res) {
+			if(res.code == 200) this.formData.headurl = res.result
 		}
 	}
 }
@@ -88,5 +92,10 @@ export default {
 <style scoped>
 .form{
 	width: 500px;
+}
+.uploadImg{
+	width: 80px;
+	height: 80px;
+	cursor: pointer;
 }
 </style>
