@@ -3,8 +3,8 @@
     <Card class="login" style="width:500px">
       <h3 class="m-b-10">Welcome</h3>
       <div class="inputWrap m-b-20">
-        <Input class="m-b-10" placeholder="account" v-model="account" clearable></Input>
-        <Input type="password" placeholder="password" v-model="password" clearable></Input>
+        <Input class="m-b-10" placeholder="account" v-model="account" clearable @keyup.enter.native="signIn"></Input>
+        <Input type="password" placeholder="password" v-model="password" clearable @keyup.enter.native="signIn"></Input>
       </div>
       <div class="btnWrap">
         <Button type="primary" class="m-b-10" long @click="signIn">sign in</Button>

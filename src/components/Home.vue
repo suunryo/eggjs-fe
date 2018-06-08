@@ -3,6 +3,9 @@
         <Layout :style="{height: '100%'}">
     		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="index">
     			<Button type="primary" @click="modal = true" icon="edit">send</Button>
+                <Tooltip class="logout" content="logout" placement="bottom-end">
+                    <Button type="ghost" shape="circle" size="small" icon="log-out" @click="logout"></Button>
+                </Tooltip>
                 <MenuItem class="menuItem" name="profile">
                     <img class="headimg" width="30" :src="userInfo.headurl">
                     {{userInfo.nickname}}
@@ -14,7 +17,8 @@
             </Menu>
             <Content class="content">
                 <Card :padding="8" class="m-b-20" v-for="v,i in contents" :key="i">
-                    <h4>{{v.user_name}}</h4>
+                    <img class="headimg" width="30" :src="v.user_headurl || defaultAvatar">
+                    <h4 :style="{display: 'inline-block'}">{{v.user_name}}</h4>
                     <div class="cardBody">{{v.content}}</div>
                     <div class="cardFoot">{{v.update_time}}</div>
                 </Card>
@@ -42,7 +46,8 @@ export default{
             userInfo: '',
             contents: '',
 			modal: false,
-            editArea: ''
+            editArea: '',
+            defaultAvatar: require('./../assets/default_avatar.jpg')
 		}
 	},
 	mounted() {
@@ -67,7 +72,20 @@ export default{
             this.axios(config).then(res => {
                 this.userInfo = res.result
             }, err => {
-              throw err
+                throw err
+            })
+        },
+        logout() {
+            let config = {
+                url: '/api/user/logout'
+            }
+            this.axios(config).then(res => {
+                if(res.code == 200) {
+                    this.$Message.info('logout success !');
+                    this.$router.replace('login')
+                }
+            }, err => {
+                throw err
             })
         },
 		ok () {
@@ -87,6 +105,10 @@ export default{
     }
     .layout-nav{
         overflow: hidden;
+    }
+    .logout{
+        float: right;
+        margin-right: 10px;
     }
     .menuItem{
     	float: right;

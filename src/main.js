@@ -34,8 +34,8 @@ Vue.prototype.axios = function(arg) {
 
     return new Promise((resolve, reject) => {
         axios(config).then(response => {
-            console.log(response.data);
-            if (response.data.code == 200) {
+            console.log(response)
+            if (response.status == 200) {
                 resolve(response.data);
             } else {
                 reject(response.data);
@@ -45,9 +45,19 @@ Vue.prototype.axios = function(arg) {
         });
     })
 }
+// 添加响应拦截器
+axios.interceptors.response.use(function (res) {
+    if(res.data.code == 501) {
+        vm.$Message.info('please login !');
+        router.replace('login')
+    }
+    return res;
+}, function (err) {
+    return err;
+});
 
 /* eslint-disable no-new */
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   components: { App },
