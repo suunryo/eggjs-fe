@@ -1,7 +1,7 @@
 <template>
 	<div class="layout">
-        <Layout :style="{height: '100%'}">
-    		<Menu :style="{paddingLeft: '20px'}" mode="horizontal" theme="light" active-name="index">
+        <Layout>
+    		<Menu class="nav" mode="horizontal" theme="light" active-name="index">
     			<Button type="primary" @click="modal = true" icon="edit">send</Button>
                 <Tooltip class="logout" content="logout" placement="bottom-end">
                     <Button type="ghost" shape="circle" size="small" icon="log-out" @click="logout"></Button>
@@ -17,10 +17,10 @@
             </Menu>
             <Content class="content">
                 <Card :padding="8" class="m-b-20" v-for="v,i in contents" :key="i">
-                    <img class="headimg" width="30" :src="v.user_headurl || defaultAvatar">
-                    <h4 :style="{display: 'inline-block'}">{{v.user_name}}</h4>
+                    <img class="headimg" width="30" :src="v.headurl || defaultAvatar">
+                    <h4 :style="{display: 'inline-block'}">{{v.nickname}}</h4>
                     <div class="cardBody">{{v.content}}</div>
-                    <div class="cardFoot">{{v.update_time}}</div>
+                    <div class="cardFoot">更新于{{v.update_time}}</div>
                 </Card>
             </Content>
             <Footer class="layout-footer-center">2018 &copy; Suunryo</Footer>
@@ -32,7 +32,8 @@
 		    ok-text="send"
 		    cancel-text="cancel"
             loading="loading"
-		    @on-ok="ok">
+		    @on-ok="addContent"
+            @keyup.enter.native.prevent="addContent">
 		    <Input v-model="editArea" type="textarea" :rows="4" placeholder="=v="></Input>
 		</Modal>
     </div>
@@ -88,12 +89,27 @@ export default{
                 throw err
             })
         },
-		ok () {
-            
-            this.$Message.info('Clicked ok');
-            setTimeout(() => {
+		addContent() {
+            let config = {
+                url: '/api/content/add',
+                type: 'post',
+                data: {
+                    user_id: this.userInfo.id,
+                    content: this.editArea
+                }
+            }
+            this.axios(config).then(res => {
+                if(res.code == 200){
+                    this.editArea = ''
+                    this.getContent()
+                }else{
+                    this.$Message.warn(res.msg)
+                }
                 this.modal = false
-            }, 1000)
+            }, err => {
+                this.modal = false
+                throw err
+            })
         },
 	}
 }
@@ -105,6 +121,11 @@ export default{
     }
     .layout-nav{
         overflow: hidden;
+    }
+    .nav{
+        padding-left: 20px;
+        position: fixed;
+        width: 100%;
     }
     .logout{
         float: right;
@@ -122,15 +143,15 @@ export default{
     	width: 80%;
     	height: 100%;
     	padding: 20px;
-    	margin: 0 auto;
+    	margin: 60px auto 0;
     	background-color: #fff;
     }
     .cardBody{
         padding: 12px 8px;
     }
     .cardFoot{
+        font-size: 12px;
         padding-top: 5px;
-        font-size: 14px;
         text-align: right;
         border-top: 1px solid #dcdcdc;
     }
